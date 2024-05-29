@@ -16,17 +16,14 @@ logger = logging.getLogger(__name__)
 import sys
 sys.path.insert(1, '..')
 
-# import chess_SL_E6_lib as lib6
-import chess_SL_E8_lib as lib8
-import chess_SL_E7_lib as lib7
+import chess_DL1_lib as lib
 import torch
 
-import chess_SL_E8_lib_ensemble as libEns
-import chess_SK_lib as SKlib
+
 
 import joblib
 
-from sklearn.neighbors import KNeighborsRegressor
+# from sklearn.neighbors import KNeighborsRegressor
 
 
 '''--------------------------------------------------
@@ -34,18 +31,17 @@ LOAD TORCH MODELS'''
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# model_loaded = torch.load('../models_EL/model_E6-4.pth', map_location=device)
-model7_loaded = torch.load('../models_EL/model_E7-2.pth', map_location=device)
-model8_loaded = torch.load('../models_EL/model_E8-1.pth', map_location=device)
+model9_loaded = torch.load('../models_EL/model_E9-1.pth', map_location=device)
+
 
 '''--------------------------------------------------
 LOAD SK MODELS'''
 
-models_to_load = ['RF_1', 'SVR_1', 'LR_1']
-sk_models_list = []
+# models_to_load = ['RF_1', 'SVR_1', 'LR_1']
+# sk_models_list = []
 
-for i, model_name in enumerate(models_to_load):
-    sk_models_list.append(joblib.load(f'../models_SK/model_{model_name}.joblib'))
+# for i, model_name in enumerate(models_to_load):
+#     sk_models_list.append(joblib.load(f'../models_SK/model_{model_name}.joblib'))
 
 
 # X_train, X_test, y_train, y_test = SKlib.load_data_XY_a_to_d()
@@ -68,8 +64,7 @@ class ExampleEngine(MinimalEngine):
 
     def search(self, board: chess.Board, *args: Any, **xargs: Any) -> PlayResult:
 
-        global model7_loaded
-        global model8_loaded
+        global model9_loaded
         global sk_models_list
         global counter
         counter += 1
@@ -77,11 +72,11 @@ class ExampleEngine(MinimalEngine):
         print(f'Predicting for move {counter}')
         # prediction = lib7.predict(model_loaded, board.fen(), move_number=counter)
 
-        prediction = lib8.predict78(model7_loaded, model8_loaded, board.fen(), move_number=counter, stochastic=True)
-
+        # prediction = lib8.predict78(model7_loaded, model8_loaded, board.fen(), move_number=counter, stochastic=True)
         # prediction = lib8.predict(model_loaded, board.fen(), move_number=counter)
         # prediction = libEns.predict_ensemble(model_loaded, board.fen(), sk_models_list, weights=[0.5, 0.25, 0.25], dl_to_sk=0.9, move_number=0, stochastic=True)
 
+        prediction = lib.predict(model9_loaded, board.fen(), move_number=counter, stochastic=True)
         
 
         
