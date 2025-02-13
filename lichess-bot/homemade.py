@@ -31,8 +31,10 @@ LOAD TORCH MODELS'''
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model9_loaded = torch.load('../models_EL/model_E9-1.pth', map_location=device)
+# model9_loaded = torch.load('../models_EL/model_E9-1.pth', map_location=device)
 
+
+model_loaded = torch.load('../models_EL/model_DL1-3.pth', map_location=device)
 
 '''--------------------------------------------------
 LOAD SK MODELS'''
@@ -64,7 +66,7 @@ class ExampleEngine(MinimalEngine):
 
     def search(self, board: chess.Board, *args: Any, **xargs: Any) -> PlayResult:
 
-        global model9_loaded
+        global model_loaded
         global sk_models_list
         global counter
         counter += 1
@@ -76,7 +78,7 @@ class ExampleEngine(MinimalEngine):
         # prediction = lib8.predict(model_loaded, board.fen(), move_number=counter)
         # prediction = libEns.predict_ensemble(model_loaded, board.fen(), sk_models_list, weights=[0.5, 0.25, 0.25], dl_to_sk=0.9, move_number=0, stochastic=True)
 
-        prediction = lib.predict(model9_loaded, board.fen(), move_number=counter, stochastic=True)
+        prediction = lib.predict(model_loaded, board.fen(), move_number=counter, stochastic=True)
         
 
         
